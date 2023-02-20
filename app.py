@@ -9,10 +9,6 @@ api = Api(app)
 
 
 
-# api.add_resource(User, '/usuarios')
-# api.add_resource(Usuarios, '/cadastro')
-
-
 @app.before_first_request
 def create_banco():
     banco.create_all()

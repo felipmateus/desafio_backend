@@ -1,7 +1,7 @@
 from sql_alchemy import banco
 
 class UserModel(banco.Model):
-    __tablename__ = 'usuarios'
+    __tablename__ = 'users'
 
     user_id = banco.Column(banco.Integer, primary_key=True)
     login = banco.Column(banco.String(80))

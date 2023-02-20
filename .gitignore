@@ -1,6 +1,18 @@
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Environments
+.env
 .venv
-.SandBox
-.__pycache__/sql_alchemy.cpython-310.pyc
-.instance/banco.db
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+#banco
+.models/__pycache__/
+models/__pycache__/
+__pycache__/
+.__pycache__/
