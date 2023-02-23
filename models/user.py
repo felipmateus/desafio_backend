@@ -4,19 +4,27 @@ class UserModel(banco.Model):
     __tablename__ = 'users'
 
     user_id = banco.Column(banco.Integer, primary_key=True)
-    login = banco.Column(banco.String(80))
-    keyword = banco.Column(banco.String(80))
+    email = banco.Column(banco.String(80))
+    password = banco.Column(banco.String(80))
+    name = banco.Column(banco.String(80))
+    cpf = banco.Column(banco.String(80))
+    type = banco.Column(banco.String(30))
 
-    def __init__(self,login,keyword):
-        self.login = login
-        self.keyword = keyword
- 
+    def __init__(self,email,password,cpf,name,type):
+        self.email = email
+        self.password = password
+        self.cpf = cpf
+        self.name = name
+        self.type = type
     
     def json(self):
 
         return{
             'user_id': self.user_id,
-            'login': self.login
+            'email': self.email,
+            'çpf': self.cpf,
+            'name': self.name,
+            'type': self.type
         }
 
     @classmethod
@@ -27,8 +35,8 @@ class UserModel(banco.Model):
         return None
     
     @classmethod
-    def find_by_login(cls, login):
-        user = cls.query.filter_by(login=login).first()
+    def find_by_login(cls, email):
+        user = cls.query.filter_by(email=email).first()
         if user:
             return user
         return None

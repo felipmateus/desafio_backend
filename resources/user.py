@@ -24,12 +24,15 @@ class UserRegister(Resource):
     def post(self):
         atributos = reqparse.RequestParser()
         
-        atributos.add_argument('login', type=str, required=True, help=("The field 'login' cannot be left blank"))
-        atributos.add_argument('keyword', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
+        atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
+        atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
+        atributos.add_argument('name', type=str, required=True, help=("The field 'name' cannot be left blank"))
+        atributos.add_argument('cpf', type=str, required=True, help=("The field 'cpf' cannot be left blank"))
+        atributos.add_argument('type', type=str, required=True, help=("The field 'type' cannot be left blank"))
         dados = atributos.parse_args()
 
-        if UserModel.find_by_login(dados["login"]):
-            return {"message":"The login '{}' already exist.".format(dados["login"])}, 201
+        if UserModel.find_by_login(dados["email"]):
+            return {"message":"The login '{}' already exist.".format(dados["email"])}, 201
         
         user = UserModel(**dados)
         user.save_user()

@@ -11,8 +11,10 @@ ENV/
 env.bak/
 venv.bak/
 
-#banco
+#cache
 .models/__pycache__/
 models/__pycache__/
 __pycache__/
 .__pycache__/
+models/__pycache__/user.cpython-310.pyc
+esources/__pycache__/user.cpython-310.pyc
