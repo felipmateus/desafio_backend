@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
-
+from models.wallet import WalletModel
 
 class User(Resource):
     # /usuarios/{user_id}
@@ -16,8 +16,8 @@ class User(Resource):
             return user.json()
 
         return {}
-    
-    
+
+
 
 class UserRegister(Resource):
     #Cadastro
@@ -36,4 +36,22 @@ class UserRegister(Resource):
         
         user = UserModel(**dados)
         user.save_user()
+        wallet = WalletModel()
+        wallet.save_wallet()
+
+
         return {"message": "User create successfully!"}, 201
+
+
+# class MoneyTransactions(Resource):
+#     #Transferencia
+#     def post(self):
+#         atributos = reqparse.RequestParser()
+
+#         atributos.add_argument('value', type=str, required=True, help=("The field 'Value' cannot be left blank"))
+#         atributos.add_argument('payer_id', type=str, required=True, help=("The field 'payer' cannot be left blank"))
+#         atributos.add_argument('payee_id', type=str, required=True, help=("The field 'payee' cannot be left blank"))
+#         dados = atributos.parse_args()
+        
+#         return
+
