@@ -29,14 +29,17 @@ class UserRegister(Resource):
         atributos.add_argument('name', type=str, required=True, help=("The field 'name' cannot be left blank"))
         atributos.add_argument('cpf', type=str, required=True, help=("The field 'cpf' cannot be left blank"))
         atributos.add_argument('type', type=str, required=True, help=("The field 'type' cannot be left blank"))
+        
         dados = atributos.parse_args()
 
         if UserModel.find_by_login(dados["email"]):
             return {"message":"The login '{}' already exist.".format(dados["email"])}, 201
         
+        dados_wallet = {}
+
         user = UserModel(**dados)
         user.save_user()
-        wallet = WalletModel()
+        wallet = WalletModel(dados["cpf"])
         wallet.save_wallet()
 
 

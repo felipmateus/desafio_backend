@@ -1,4 +1,5 @@
 from sql_alchemy import banco
+from sqlalchemy.orm import relationship
 
 class UserModel(banco.Model):
     __tablename__ = 'users'
@@ -9,6 +10,7 @@ class UserModel(banco.Model):
     name = banco.Column(banco.String(80))
     cpf = banco.Column(banco.String(80))
     type = banco.Column(banco.String(30))
+    # value = banco.Column(banco.String(30))
     
 
     def __init__(self,email,password,cpf,name,type):
@@ -17,14 +19,16 @@ class UserModel(banco.Model):
         self.cpf = cpf
         self.name = name
         self.type = type
+        # self.value = 0
     
     def json(self):
         return{
             'user_id': self.user_id,
             'email': self.email,
-            'çpf': self.cpf,
+            'cpf': self.cpf,
             'name': self.name,
-            'type': self.type
+            'type': self.type,
+            # 'value': self.value
         }
 
     @classmethod

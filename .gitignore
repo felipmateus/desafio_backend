@@ -18,3 +18,11 @@ __pycache__/
 .__pycache__/
 models/__pycache__/user.cpython-310.pyc
 esources/__pycache__/user.cpython-310.pyc
+.models/__pycache__
+resources/__pycache__
+models/__pycache__/user.cpython-310.pyc
+resources/__pycache__/user.cpython-310.pyc
+__pycache__/sql_alchemy.cpython-310.pyc
+models/__pycache__/user.cpython-310.pyc
+resources/__pycache__/__init__.cpython-310.pyc
+resources/__pycache__/user.cpython-310.pyc
