@@ -13,9 +13,8 @@ class UserModel(banco.Model):
     # value = banco.Column(banco.String(30))
     
 
-    def __init__(self,email,password,cpf,name,type):
+    def __init__(self,email,cpf,name,type):
         self.email = email
-        self.password = password
         self.cpf = cpf
         self.name = name
         self.type = type
