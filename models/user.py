@@ -10,15 +10,16 @@ class UserModel(banco.Model):
     name = banco.Column(banco.String(80))
     cpf = banco.Column(banco.String(80))
     type = banco.Column(banco.String(30))
-    # value = banco.Column(banco.String(30))
+    
     
 
-    def __init__(self,email,cpf,name,type):
+    def __init__(self,email,password,cpf,name,type):
         self.email = email
+        self.password = password
         self.cpf = cpf
         self.name = name
         self.type = type
-        # self.value = 0
+       
     
     def json(self):
         return{
@@ -26,8 +27,8 @@ class UserModel(banco.Model):
             'email': self.email,
             'cpf': self.cpf,
             'name': self.name,
-            'type': self.type,
-            # 'value': self.value
+            'type': self.type
+            
         }
 
     @classmethod
