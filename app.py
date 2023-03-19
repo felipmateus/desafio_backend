@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restful import Resource, Api
-from controller.user import User, UserRegister, UserLogin
+from controller.user import User, UserRegister, UserLogin, UserTransferMoney
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -18,6 +18,7 @@ def create_banco():
 api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(UserRegister, '/cadastro')
 api.add_resource(UserLogin, '/login')
+api.add_resource(UserTransferMoney, '/transferencia')
 
 if __name__ == '__main__':
     from sql_alchemy import banco
