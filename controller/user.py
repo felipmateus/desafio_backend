@@ -12,6 +12,9 @@ atributos.add_argument('name', type=str, required=False)
 atributos.add_argument('cpf', type=str, required=False)
 atributos.add_argument('type', type=str, required=False)
 atributos.add_argument('value', type=int, required=False)
+atributos.add_argument('value_payer', type=int, required=False)
+atributos.add_argument('email_payee', type=int, required=False)
+atributos.add_argument('cpf_payee', type=int, required=False) 
 
 
 class User(Resource):
@@ -38,6 +41,13 @@ class User(Resource):
 class UserRegister(Resource):
     def post(self):
 
+
+        atributos = reqparse.RequestParser()
+        atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
+        atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
+        atributos.add_argument('name', type=str, required=False)
+        atributos.add_argument('cpf', type=str, required=False)
+        atributos.add_argument('type', type=str, required=False)
         dados = atributos.parse_args()
 
         if UserModel.find_by_login(dados["email"]):
@@ -66,13 +76,28 @@ class UserLogin(Resource):
 class UserTransferMoney(Resource):
         @classmethod
         def post(cls):
-            dados = atributos.parse_args()
-            wallet = WalletModel.find_wallet_by_cpf(dados['cpf'])
-            if wallet:
-                wallet.value = dados["value"]
-                wallet.update_wallet()
-                return{'message': 'Carteira encontrada com sucesso'}
 
-            return{'message': 'Não foi possível encontrar a carteira do email {cpf}'.format(cpf=dados['cpf'])} 
+            atributos = reqparse.RequestParser()
+            atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
+            atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
+            atributos.add_argument('cpf', type=str, required=False)
+            # atributos.add_argument('type', type=str, required=False)
+            atributos.add_argument('value_payer', type=int, required=False)
+            atributos.add_argument('email_payee', type=str, required=False)
+            atributos.add_argument('cpf_payee', type=str, required=False) 
+
+            dados = atributos.parse_args()
+            wallet_payee = WalletModel.find_wallet_by_cpf(dados['cpf_payee'])
+            wallet_payer = WalletModel.find_wallet_by_cpf(dados['cpf'])
+            if wallet_payer and wallet_payee:
+                if int(dados['value_payer'])<=int(wallet_payer.value):
+                    wallet_payee.value = int(wallet_payee.value) + int(dados['value_payer'])
+                    wallet_payer.value = int(wallet_payer.value) - int(dados['value_payer'])
+                     
+                    wallet_payee.update_wallet()
+                    wallet_payer.update_wallet()
+
+                    return{'message': 'Transferência realizada com sucesso'}
+            return{'message': 'Não foi possível realizar a transferência'} 
 
 
