@@ -11,7 +11,7 @@ atributos.add_argument('password', type=str, required=True, help=("The field 'ke
 atributos.add_argument('name', type=str, required=False)
 atributos.add_argument('cpf', type=str, required=False)
 atributos.add_argument('type', type=str, required=False)
-
+atributos.add_argument('value', type=int, required=False)
 
 
 class User(Resource):
@@ -33,7 +33,6 @@ class User(Resource):
             
             return{'message': 'User deleted'}, 201
         return {'message': 'User not found'}, 404
-
 
 
 class UserRegister(Resource):
@@ -65,14 +64,14 @@ class UserLogin(Resource):
         
 
 class UserTransferMoney(Resource):
-        
         @classmethod
         def post(cls):
             dados = atributos.parse_args()
             wallet = WalletModel.find_wallet_by_cpf(dados['cpf'])
-
             if wallet:
-                 return{'message': 'Carteira encontrada com sucesso'}
+                wallet.value = dados["value"]
+                wallet.update_wallet()
+                return{'message': 'Carteira encontrada com sucesso'}
 
             return{'message': 'Não foi possível encontrar a carteira do email {cpf}'.format(cpf=dados['cpf'])} 
 

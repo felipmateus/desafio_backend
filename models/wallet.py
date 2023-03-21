@@ -24,6 +24,7 @@ class WalletModel(banco.Model):
     @classmethod
     def find_wallet_by_id(cls, wallet_id):
         wallet = cls.query.filter_by(wallet_id=wallet_id).first()
+        # wallet = cls.filter
         if wallet:
             return wallet
         return None
@@ -35,6 +36,9 @@ class WalletModel(banco.Model):
             return wallet
         return None
     
+    
+    def update_wallet(self):
+        banco.session.commit()    
 
     def save_wallet(self):
         banco.session.add(self)
