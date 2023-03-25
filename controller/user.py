@@ -2,19 +2,20 @@ from flask_restful import Resource, reqparse
 from models.user import UserModel
 from models.wallet import WalletModel
 from flask_jwt_extended import create_access_token, jwt_required
-from controller.security.safe_str_cmp import safe_str_cmp
+from controller.helper.safe_str_cmp import safe_str_cmp
+from controller.helper.adapter import adapter
+import requests
 
-
-atributos = reqparse.RequestParser()
-atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
-atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
-atributos.add_argument('name', type=str, required=False)
-atributos.add_argument('cpf', type=str, required=False)
-atributos.add_argument('type', type=str, required=False)
-atributos.add_argument('value', type=int, required=False)
-atributos.add_argument('value_payer', type=int, required=False)
-atributos.add_argument('email_payee', type=int, required=False)
-atributos.add_argument('cpf_payee', type=int, required=False) 
+# atributos = reqparse.RequestParser()
+# atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
+# atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
+# atributos.add_argument('name', type=str, required=False)
+# atributos.add_argument('cpf', type=str, required=False)
+# atributos.add_argument('type', type=str, required=False)
+# atributos.add_argument('value', type=int, required=False)
+# atributos.add_argument('value_payer', type=int, required=False)
+# atributos.add_argument('email_payee', type=int, required=False)
+# atributos.add_argument('cpf_payee', type=int, required=False) 
 
 
 class User(Resource):
@@ -29,7 +30,7 @@ class User(Resource):
     @jwt_required()
     def delete(self, user_id):
         user = UserModel.find_user(user_id)
-        wallet = WalletModel.find_wallet(wallet_id=user_id)
+        wallet = WalletModel.find_wallet_by_id(wallet_id=user_id)
         if user and wallet:
             user.delete_user()
             wallet.delete_wallet()
@@ -41,13 +42,12 @@ class User(Resource):
 class UserRegister(Resource):
     def post(self):
 
-
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
-        atributos.add_argument('name', type=str, required=False)
-        atributos.add_argument('cpf', type=str, required=False)
-        atributos.add_argument('type', type=str, required=False)
+        atributos.add_argument('name', type=str, required=True, help=("The field 'name' cannot be left blank"))
+        atributos.add_argument('cpf', type=int, required=True, help=("The field 'CPF' cannot be left blank"))
+        atributos.add_argument('type', type=str, required=True, help=("The field 'type' cannot be left blank"))
         dados = atributos.parse_args()
 
         if UserModel.find_by_login(dados["email"]):
@@ -63,9 +63,14 @@ class UserRegister(Resource):
 class UserLogin(Resource):      
         @classmethod
         def post(cls):
+
+            atributos = reqparse.RequestParser()
+            atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
+            atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
             dados = atributos.parse_args()
 
             user = UserModel.find_by_login(dados['email'])
+            dados = atributos.parse_args()
 
             if user and safe_str_cmp(user.password, dados['password']):
                 acess_token = create_access_token(identity=user.user_id)
@@ -78,26 +83,24 @@ class UserTransferMoney(Resource):
         def post(cls):
 
             atributos = reqparse.RequestParser()
-            atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
-            atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
-            atributos.add_argument('cpf', type=str, required=False)
-            # atributos.add_argument('type', type=str, required=False)
-            atributos.add_argument('value_payer', type=int, required=False)
-            atributos.add_argument('email_payee', type=str, required=False)
-            atributos.add_argument('cpf_payee', type=str, required=False) 
+            atributos.add_argument('cpf', type=int, required=True, help=("The field 'cpf' cannot be left blank"))
+            atributos.add_argument('value_payer', type=float, required=True, help=("The field 'value' cannot be left blank"))
+            atributos.add_argument('cpf_payee', type=int, required=True, help=("The field 'cpf of payee' cannot be left blank")) 
 
             dados = atributos.parse_args()
             wallet_payee = WalletModel.find_wallet_by_cpf(dados['cpf_payee'])
             wallet_payer = WalletModel.find_wallet_by_cpf(dados['cpf'])
             if wallet_payer and wallet_payee:
-                if int(dados['value_payer'])<=int(wallet_payer.value):
-                    wallet_payee.value = int(wallet_payee.value) + int(dados['value_payer'])
-                    wallet_payer.value = int(wallet_payer.value) - int(dados['value_payer'])
+                if dados['value_payer']<=wallet_payer.value:
+                    wallet_payee.value = wallet_payee.value + dados['value_payer']
+                    wallet_payer.value = wallet_payer.value - dados['value_payer']
                      
                     wallet_payee.update_wallet()
                     wallet_payer.update_wallet()
 
                     return{'message': 'Transferência realizada com sucesso'}
             return{'message': 'Não foi possível realizar a transferência'} 
+
+
 
 

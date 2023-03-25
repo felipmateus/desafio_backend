@@ -6,11 +6,11 @@ class WalletModel(banco.Model):
 
     wallet_id = banco.Column(banco.Integer, primary_key=True)
     cpf = banco.Column(banco.String(80), banco.ForeignKey('users.cpf'))
-    value = banco.Column(banco.String(80))
+    value = banco.Column(banco.Float(precision=4))
 
 
     def __init__(self, cpf):
-        self.value = 0
+        self.value = 1000
         self.cpf = cpf
 
 
