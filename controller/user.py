@@ -6,17 +6,6 @@ from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.adapter import adapter
 import requests
 
-# atributos = reqparse.RequestParser()
-# atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
-# atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
-# atributos.add_argument('name', type=str, required=False)
-# atributos.add_argument('cpf', type=str, required=False)
-# atributos.add_argument('type', type=str, required=False)
-# atributos.add_argument('value', type=int, required=False)
-# atributos.add_argument('value_payer', type=int, required=False)
-# atributos.add_argument('email_payee', type=int, required=False)
-# atributos.add_argument('cpf_payee', type=int, required=False) 
-
 
 class User(Resource):
     # /usuarios/{user_id}
@@ -79,7 +68,7 @@ class UserLogin(Resource):
         
 
 class UserTransferMoney(Resource):
-        @classmethod
+        @jwt_required()
         def post(cls):
 
             atributos = reqparse.RequestParser()

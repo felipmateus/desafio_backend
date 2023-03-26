@@ -8,7 +8,7 @@ class UserModel(banco.Model):
     email = banco.Column(banco.String(80))
     password = banco.Column(banco.String(80))
     name = banco.Column(banco.String(80))
-    cpf = banco.Column(banco.String(80))
+    cpf = banco.Column(banco.Integer)
     type = banco.Column(banco.String(30))
     
     
