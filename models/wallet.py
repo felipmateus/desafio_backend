@@ -19,7 +19,7 @@ class WalletModel(banco.Model):
             "wallet_id": self.wallet_id,
             'value': self.value,
             "cpf": self.value
-        }   
+        }
 
     @classmethod
     def find_wallet_by_id(cls, wallet_id):

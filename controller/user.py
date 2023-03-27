@@ -3,8 +3,8 @@ from models.user import UserModel
 from models.wallet import WalletModel
 from flask_jwt_extended import create_access_token, jwt_required
 from controller.helper.safe_str_cmp import safe_str_cmp
-from controller.helper.adapter import adapter
-import requests
+from controller.helper.approve_transfer import request_transfer_money
+
 
 
 class User(Resource):
@@ -79,11 +79,13 @@ class UserTransferMoney(Resource):
             dados = atributos.parse_args()
             wallet_payee = WalletModel.find_wallet_by_cpf(dados['cpf_payee'])
             wallet_payer = WalletModel.find_wallet_by_cpf(dados['cpf'])
-            if wallet_payer and wallet_payee:
+            aprove = request_transfer_money()
+            
+            if wallet_payer and wallet_payee and aprove:
                 if dados['value_payer']<=wallet_payer.value:
                     wallet_payee.value = wallet_payee.value + dados['value_payer']
                     wallet_payer.value = wallet_payer.value - dados['value_payer']
-                     
+
                     wallet_payee.update_wallet()
                     wallet_payer.update_wallet()
 
