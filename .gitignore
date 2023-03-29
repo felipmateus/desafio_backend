@@ -29,3 +29,4 @@ resources/__pycache__/user.cpython-310.pyc
 .DS_Store
 .sand_box.py
 .vscode
+.vscode/settings.json
