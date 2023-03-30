@@ -4,7 +4,13 @@ from models.wallet import WalletModel
 from flask_jwt_extended import create_access_token, jwt_required
 from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.approve_transfer import request_transfer_money
+from flask import render_template, make_response
 
+
+class Home(Resource):
+    def get(self):
+        return make_response(render_template("home/index.html"))
+    
 
 
 class User(Resource):

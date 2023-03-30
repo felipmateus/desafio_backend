@@ -1,9 +1,9 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Resource, Api
-from controller.user import User, UserRegister, UserLogin, UserTransferMoney
+from controller.user import User, UserRegister, UserLogin, UserTransferMoney, Home
 from flask_jwt_extended import JWTManager
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder='templates', static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_SECRET_KEY'] = 'dont_tell_anyone'
@@ -15,6 +15,7 @@ jwt = JWTManager(app)
 def create_banco():
     banco.create_all()
 
+api.add_resource(Home, '/home')
 api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(UserRegister, '/cadastro')
 api.add_resource(UserLogin, '/login')
