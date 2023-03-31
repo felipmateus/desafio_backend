@@ -35,8 +35,11 @@ class User(Resource):
 
 
 class UserRegister(Resource):
-    def post(self):
 
+    def get(self):
+        return make_response(render_template("register/index.html"))
+
+    def post(self):
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
