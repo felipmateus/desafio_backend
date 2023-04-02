@@ -40,11 +40,7 @@ class UserRegister(Resource):
 
     def post(self):
         
-        if request.content_type == 'application/json':
-            data = request.get_json()
-        else:
-            data = request.form.to_dict()
-
+        data = request.get_json()
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
