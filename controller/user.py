@@ -4,17 +4,16 @@ from models.wallet import WalletModel
 from flask_jwt_extended import create_access_token, jwt_required
 from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.approve_transfer import request_transfer_money
-from flask import render_template, make_response
+from flask import render_template, make_response, jsonify, request
 
 
 class Home(Resource):
+
     def get(self):
         return make_response(render_template("home/index.html"))
     
 
-
 class User(Resource):
-    # /usuarios/{user_id}
     @jwt_required()
     def get(self, user_id):
         user = UserModel.find_user(user_id)
@@ -37,9 +36,15 @@ class User(Resource):
 class UserRegister(Resource):
 
     def get(self):
-        return make_response(render_template("register/index.html"))
+        return make_response(render_template("register/get/index.html"))
 
     def post(self):
+        
+        if request.content_type == 'application/json':
+            data = request.get_json()
+        else:
+            data = request.form.to_dict()
+
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
@@ -47,7 +52,7 @@ class UserRegister(Resource):
         atributos.add_argument('cpf', type=int, required=True, help=("The field 'CPF' cannot be left blank"))
         atributos.add_argument('type', type=str, required=True, help=("The field 'type' cannot be left blank"))
         dados = atributos.parse_args()
-
+        
         if UserModel.find_by_login(dados["email"]):
             return {"message":"The login '{}' already exist.".format(dados["email"])}, 201
         
@@ -55,10 +60,10 @@ class UserRegister(Resource):
         user.save_user()
         wallet = WalletModel(dados["cpf"])
         wallet.save_wallet()
-        return {"message": "User create successfully!"}, 201
+        return make_response(render_template("register/post/index.html")), 201
 
-
-class UserLogin(Resource):      
+class UserLogin(Resource):
+           
         @classmethod
         def post(cls):
 
@@ -77,6 +82,7 @@ class UserLogin(Resource):
         
 
 class UserTransferMoney(Resource):
+        
         @jwt_required()
         def post(cls):
 

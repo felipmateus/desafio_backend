@@ -2,13 +2,12 @@
 <html>
   <head>
     <title>Registro de Usuário</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='register/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='register/get/style.css') }}">
   </head>
   <body>
     <div class="form-wrapper">
       <h1 class="form-title">Registro de Usuário</h1>
-      <form action="/cadastro" method="post">
-      
+      <form id="register-form">
         <div class="form-group">
           <label for="email" class="form-label"><i class="fa fa-envelope"></i> Email:</label>
           <input type="email" id="email" name="email" class="form-input" required>
@@ -35,5 +34,25 @@
         <button type="submit" class="form-button">Registrar</button>
       </form>
     </div>
+    <script>
+      document.getElementById('register-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // prevent default form submission behavior
+        var formData = new FormData(event.target); // get form data
+        var jsonFormData = {}; // create empty JSON object
+        formData.forEach(function(value, key) {
+          jsonFormData[key] = value; // add form data to JSON object
+        });
+        fetch('/cadastro', {
+          method: 'POST',
+          body: JSON.stringify(jsonFormData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+      });
+    </script>
   </body>
 </html>
