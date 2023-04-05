@@ -40,7 +40,7 @@ class UserRegister(Resource):
 
     def post(self):
         
-        data = request.get_json()
+        # data = request.get_json()
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
@@ -50,17 +50,33 @@ class UserRegister(Resource):
         dados = atributos.parse_args()
         
         if UserModel.find_by_login(dados["email"]):
-            return {"message":"The login '{}' already exist.".format(dados["email"])}, 201
+            # return jsonify({"message":"The login '{}' already exist.".format(dados["email"])}), 201
+            # return jsonify({"message":"The login already exist."}), 201
+            context = { 'name': 'The login already exist.'}
+            html_content = render_template("register/post/sucess/index.html", **context)
+            response = make_response({"message":"The login already exist."})
+            response.headers['Content-Type'] = 'text/html'
+            response.status_code = 201
+            return response
+           
         
         user = UserModel(**dados)
         user.save_user()
         wallet = WalletModel(dados["cpf"])
         wallet.save_wallet()
-        return make_response(render_template("register/post/index.html")), 201
+        context = { 'name': 'The login already exist.'}
+        html_content = render_template("register/post/sucess/index.html", **context)
+        response = make_response(html_content)
+        response.headers['Content-Type'] = 'text/html'
+        response.status_
+        return response
 
 class UserLogin(Resource):
-           
-        @classmethod
+        
+        def get(self):
+            return make_response(render_template("login/index.html"))
+
+
         def post(cls):
 
             atributos = reqparse.RequestParser()
@@ -73,9 +89,15 @@ class UserLogin(Resource):
 
             if user and safe_str_cmp(user.password, dados['password']):
                 acess_token = create_access_token(identity=user.user_id)
-                return {'acess_token': acess_token}, 200
+                # response = make_response(jsonify({'token': acess_token}), 200)
+                response = make_response({'token': acess_token}, 200)
+                response.headers['Content-Type'] = 'application/json'
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers['Access-Control-Allow-Credentials'] = 'true'
+                return response
+            
             return {'message': 'The username or password is incorrect.'}, 401
-        
+            
 
 class UserTransferMoney(Resource):
         
@@ -102,7 +124,11 @@ class UserTransferMoney(Resource):
 
                     return{'message': 'Transferência realizada com sucesso'}
             return{'message': 'Não foi possível realizar a transferência'} 
-
+        
+class dashboard(Resource):
+    @jwt_required()
+    def get(self):
+        return make_response(render_template("dashboard/index.html"))
 
 
 

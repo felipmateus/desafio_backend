@@ -35,24 +35,74 @@
       </form>
     </div>
     <script>
-      document.getElementById('register-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // prevent default form submission behavior
-        var formData = new FormData(event.target); // get form data
-        var jsonFormData = {}; // create empty JSON object
-        formData.forEach(function(value, key) {
-          jsonFormData[key] = value; // add form data to JSON object
-        });
-        fetch('/cadastro', {
-          method: 'POST',
-          body: JSON.stringify(jsonFormData),
-          headers: {
-            'Content-Type': 'application/json'
+
+      document.getElementById('register-form').addEventListener('submit', handleFormSubmit);
+
+      async function handleFormSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const jsonFormData = convertFormDataToJson(formData);
+
+        try {
+          const response = await fetch('/cadastro', {
+            method: 'POST',
+            body: JSON.stringify(jsonFormData),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.status === 200) {
+            displaySuccessMessage();
+            await delay(3000);
+            redirectToHomePage();
+          } else {
+            const errorMessage = await getErrorMessage(response);
+            displayErrorMessage(errorMessage);
           }
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-      });
+        } catch (error) {
+          console.error(error);
+          const errorMessage = 'Ocorreu um erro ao tentar criar a sua conta. Por favor, tente novamente mais tarde.';
+          displayErrorMessage(errorMessage);
+        }
+      }
+
+      function convertFormDataToJson(formData) {
+        const jsonFormData = {};
+        formData.forEach((value, key) => {
+          jsonFormData[key] = value;
+        });
+        return jsonFormData;
+      }
+
+      function displaySuccessMessage() {
+        const successMessage = document.createElement('p');
+        successMessage.textContent = 'Sua conta foi criada com sucesso. Faça login agora para começar a usar.';
+        document.body.appendChild(successMessage);
+      }
+
+      async function getErrorMessage(response) {
+        if (response.status === 201) {
+          return 'O email informado já está em uso. Por favor, tente outro.';
+        } else {
+          throw new Error('Response not OK');
+        }
+      }
+
+      function displayErrorMessage(message) {
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = message;
+        document.body.appendChild(errorMessage);
+      }
+
+      function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      function redirectToHomePage() {
+        window.location.href = 'http://127.0.0.1:5000/home';
+      }
+
     </script>
   </body>
 </html>

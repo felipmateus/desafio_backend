@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_restful import Resource, Api
-from controller.user import User, UserRegister, UserLogin, UserTransferMoney, Home
+from controller.user import *
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__,template_folder='templates', static_folder='static')
@@ -20,6 +20,7 @@ api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(UserRegister, '/cadastro')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserTransferMoney, '/transferencia')
+api.add_resource(dashboard, '/dashboard')
 
 if __name__ == '__main__':
     from sql_alchemy import banco

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+      body {
+        background-color: #f2f2f2;
+        font-family: Arial, sans-serif;
+      }
+      
+      header {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      
+      h1 {
+        margin: 0;
+      }
+      
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 100px);
+      }
+      
+      .task {
+        width: 200px;
+        height: 200px;
+        margin: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 10px #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: box-shadow 0.3s;
+      }
+      
+      .task:hover {
+        box-shadow: 0px 0px 15px #999;
+      }
+      
+      .task-1 {
+        background-color: #f44336;
+      }
+      
+      .task-2 {
+        background-color: #4caf50;
+      }
+      
+      .task-3 {
+        background-color: #2196f3;
+      }
+      
+      .task-4 {
+        background-color: #ffc107;
+      }
+      
+      .task-title {
+        color: white;
+        font-size: 24px;
+        text-align: center;
+        text-shadow: 1px 1px #666;
+      }
+      
+      .task-title span {
+        display: block;
+        font-size: 16px;
+        font-weight: normal;
+        margin-top: 5px;
+        text-shadow: 1px 1px #666;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dashboard</h1>
+    </header>
+    <main>
+      <div class="task task-1">
+        <div class="task-title">
+          Tarefa 1
+          <span>Descrição da Tarefa 1</span>
+        </div>
+      </div>
+      <div class="task task-2">
+        <div class="task-title">
+          Tarefa 2
+          <span>Descrição da Tarefa 2</span>
+        </div>
+      </div>
+      <div class="task task-3">
+        <div class="task-title">
+          Tarefa 3
+          <span>Descrição da Tarefa 3</span>
+        </div>
+      </div>
+      <div class="task task-4">
+        <div class="task-title">
+          Tarefa 4
+          <span>Descrição da Tarefa 4</span>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
