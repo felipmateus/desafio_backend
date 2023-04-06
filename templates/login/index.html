@@ -26,46 +26,47 @@
       <p>&copy; 2023</p>
     </footer>
     <script>
-const form = document.getElementById('login-form');
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+      const form = document.getElementById('login-form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-  try {
-    const response = await fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-    });
+        try {
+          const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
 
-    const data = await response.json();
+          const data = await response.json();
 
-    // Store the token in a secure HttpOnly cookie
-    document.cookie = `token=${data.token}; path=/; Secure; HttpOnly`;
-    
-    // Pass the token as a Bearer token in the Authorization header
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${data.token}` // Adicione esta linha para passar o token
-    };
-    // Redireciona o usuário para outra página
-    window.location.href = '/dashboard';
+          // Store the token in a secure HttpOnly cookie
+          document.cookie = `access_token_cookie=${data.access_token}; path=/; Secure; HttpOnly`;
+          
+          
 
-  } catch (error) {
-    console.error(error);
-  }
-});
+          // Pass the token as a Bearer token in the Authorization header
+          const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.access_token}` // Set the JWT_HEADER_TYPE and use the access_token from the response
+          };
+          // Redirect the user to another page
+          window.location.href = '/dashboard';
 
+        } catch (error) {
+          console.error(error);
+        }
+      });
     </script>
   </body>
 </html>

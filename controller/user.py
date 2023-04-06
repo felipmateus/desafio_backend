@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
 from models.wallet import WalletModel
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
 from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.approve_transfer import request_transfer_money
 from flask import render_template, make_response, jsonify, request
@@ -68,7 +68,7 @@ class UserRegister(Resource):
         html_content = render_template("register/post/sucess/index.html", **context)
         response = make_response(html_content)
         response.headers['Content-Type'] = 'text/html'
-        response.status_
+        response.status_code = 200
         return response
 
 class UserLogin(Resource):
@@ -89,11 +89,9 @@ class UserLogin(Resource):
 
             if user and safe_str_cmp(user.password, dados['password']):
                 acess_token = create_access_token(identity=user.user_id)
-                # response = make_response(jsonify({'token': acess_token}), 200)
                 response = make_response({'token': acess_token}, 200)
                 response.headers['Content-Type'] = 'application/json'
-                response.headers['Access-Control-Allow-Origin'] = '*'
-                response.headers['Access-Control-Allow-Credentials'] = 'true'
+                set_access_cookies(response, acess_token)
                 return response
             
             return {'message': 'The username or password is incorrect.'}, 401
@@ -125,22 +123,12 @@ class UserTransferMoney(Resource):
                     return{'message': 'Transferência realizada com sucesso'}
             return{'message': 'Não foi possível realizar a transferência'} 
         
-# class dashboard(Resource):
-#     @jwt_required()
-#     def get(self):
-#         return make_response(render_template("dashboard/index.html"))
-
 
 class Dashboard(Resource):
+    @jwt_required()
     def get(self):
-        # Faça a validação do token aqui, usando a biblioteca de manipulação de cookies do Flask
-        # Por exemplo, você pode usar o request.cookies.get('token') para obter o valor do cookie 'token'
-        # e então fazer a validação do token usando a biblioteca Flask-JWT-Extended
-        token = request.cookies.get('token')
-        if token:
-            # Token válido, redireciona para a página de dashboard
-            return make_response(render_template("dashboard/index.html"))
-        else:
-            # Token inválido, redireciona para a página de login
-            return make_response(render_template("login/login.html"))
+
+        # Token válido, redireciona para a página de dashboard
+        return make_response(render_template("dashboard/index.html"))
+
 
