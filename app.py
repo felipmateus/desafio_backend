@@ -20,7 +20,7 @@ api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(UserRegister, '/cadastro')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserTransferMoney, '/transferencia')
-api.add_resource(dashboard, '/dashboard')
+api.add_resource(Dashboard, '/dashboard')
 
 if __name__ == '__main__':
     from sql_alchemy import banco

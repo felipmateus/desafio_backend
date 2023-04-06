@@ -125,10 +125,22 @@ class UserTransferMoney(Resource):
                     return{'message': 'Transferência realizada com sucesso'}
             return{'message': 'Não foi possível realizar a transferência'} 
         
-class dashboard(Resource):
-    @jwt_required()
+# class dashboard(Resource):
+#     @jwt_required()
+#     def get(self):
+#         return make_response(render_template("dashboard/index.html"))
+
+
+class Dashboard(Resource):
     def get(self):
-        return make_response(render_template("dashboard/index.html"))
-
-
+        # Faça a validação do token aqui, usando a biblioteca de manipulação de cookies do Flask
+        # Por exemplo, você pode usar o request.cookies.get('token') para obter o valor do cookie 'token'
+        # e então fazer a validação do token usando a biblioteca Flask-JWT-Extended
+        token = request.cookies.get('token')
+        if token:
+            # Token válido, redireciona para a página de dashboard
+            return make_response(render_template("dashboard/index.html"))
+        else:
+            # Token inválido, redireciona para a página de login
+            return make_response(render_template("login/login.html"))
 

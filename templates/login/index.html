@@ -26,36 +26,46 @@
       <p>&copy; 2023</p>
     </footer>
     <script>
-      const form = document.getElementById('login-form');
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+const form = document.getElementById('login-form');
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-        fetch('/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          // Armazena o token em um cookie
-          document.cookie = `token=${data.token}; path=/; Secure`;
-          // Redireciona o usuário para outra página
-          window.location.href = '/dashboard';
-        })
-        .catch(error => console.error(error));
-      });
+  try {
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    const data = await response.json();
+
+    // Store the token in a secure HttpOnly cookie
+    document.cookie = `token=${data.token}; path=/; Secure; HttpOnly`;
+    
+    // Pass the token as a Bearer token in the Authorization header
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${data.token}` // Adicione esta linha para passar o token
+    };
+    // Redireciona o usuário para outra página
+    window.location.href = '/dashboard';
+
+  } catch (error) {
+    console.error(error);
+  }
+});
+
     </script>
   </body>
 </html>
