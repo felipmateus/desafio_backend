@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Transferência de dinheiro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='transfer/style.css') }}">
+    <style>
+      /* Adicione estilos CSS aqui */
+    </style>
+  </head>
+  <body>
+    <h1>Transferência de dinheiro</h1>
+    <form action="/transfer" method="post">
+      <label for="cpf">CPF do pagador:</label>
+      <input type="text" id="cpf" name="cpf"><br>
+
+      <label for="value_payer">Valor:</label>
+      <input type="text" id="value_payer" name="value_payer"><br>
+
+      <label for="cpf_payee">CPF do recebedor:</label>
+      <input type="text" id="cpf_payee" name="cpf_payee"><br>
+
+      <input type="submit" value="Transferir">
+    </form>
+  </body>
+</html>

@@ -99,6 +99,10 @@ class UserLogin(Resource):
 
 class UserTransferMoney(Resource):
         
+       
+        def get(self):
+            return make_response(render_template("transfer/index.html"))
+
         @jwt_required()
         def post(cls):
 
