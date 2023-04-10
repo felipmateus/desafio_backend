@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
 from models.wallet import WalletModel
-from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies
+from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies, get_jwt_identity
 from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.approve_transfer import request_transfer_money
 from flask import render_template, make_response, jsonify, request
@@ -12,7 +12,6 @@ class Home(Resource):
     def get(self):
         return make_response(render_template("home/index.html"))
     
-
 class User(Resource):
     @jwt_required()
     def get(self, user_id):
@@ -32,7 +31,6 @@ class User(Resource):
             return{'message': 'User deleted'}, 201
         return {'message': 'User not found'}, 404
 
-
 class UserRegister(Resource):
 
     def get(self):
@@ -40,7 +38,7 @@ class UserRegister(Resource):
 
     def post(self):
         
-        # data = request.get_json()
+        # Define os atributos da requisição
         atributos = reqparse.RequestParser()
         atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
         atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
@@ -49,9 +47,8 @@ class UserRegister(Resource):
         atributos.add_argument('type', type=str, required=True, help=("The field 'type' cannot be left blank"))
         dados = atributos.parse_args()
         
+        # Verifica se o usuário já existe
         if UserModel.find_by_login(dados["email"]):
-            # return jsonify({"message":"The login '{}' already exist.".format(dados["email"])}), 201
-            # return jsonify({"message":"The login already exist."}), 201
             context = { 'name': 'The login already exist.'}
             html_content = render_template("register/post/sucess/index.html", **context)
             response = make_response({"message":"The login already exist."})
@@ -59,7 +56,7 @@ class UserRegister(Resource):
             response.status_code = 201
             return response
            
-        
+        # Cria o usuário
         user = UserModel(**dados)
         user.save_user()
         wallet = WalletModel(dados["cpf"])
@@ -79,16 +76,24 @@ class UserLogin(Resource):
 
         def post(cls):
 
+            # Define os atributos da requisição
             atributos = reqparse.RequestParser()
             atributos.add_argument('email', type=str, required=True, help=("The field 'email' cannot be left blank"))
             atributos.add_argument('password', type=str, required=True, help=("The field 'keyword' cannot be left blank"))
             dados = atributos.parse_args()
 
+            # Busca o usuário no banco de dados
             user = UserModel.find_by_login(dados['email'])
             dados = atributos.parse_args()
 
+            # Verifica se o usuário existe e se a senha está correta
             if user and safe_str_cmp(user.password, dados['password']):
-                acess_token = create_access_token(identity=user.user_id)
+                acess_token = create_access_token(identity={
+                                                   'id':user.user_id,
+                                                   'email':user.email,
+                                                   'cpf':user.cpf
+                                                   })
+                
                 response = make_response({'token': acess_token}, 200)
                 response.headers['Content-Type'] = 'application/json'
                 set_access_cookies(response, acess_token)
@@ -96,38 +101,46 @@ class UserLogin(Resource):
             
             return {'message': 'The username or password is incorrect.'}, 401
             
-
 class UserTransferMoney(Resource):
         
-       
+        @jwt_required()
         def get(self):
             return make_response(render_template("transfer/index.html"))
 
         @jwt_required()
         def post(cls):
+            
+            # Recebe o usuário logado
+            curent_user = get_jwt_identity()
 
+            # Define os atributos da requisição
             atributos = reqparse.RequestParser()
-            atributos.add_argument('cpf', type=int, required=True, help=("The field 'cpf' cannot be left blank"))
             atributos.add_argument('value_payer', type=float, required=True, help=("The field 'value' cannot be left blank"))
             atributos.add_argument('cpf_payee', type=int, required=True, help=("The field 'cpf of payee' cannot be left blank")) 
 
+            # Encontra as carteiras do pagador e do recebedor
             dados = atributos.parse_args()
             wallet_payee = WalletModel.find_wallet_by_cpf(dados['cpf_payee'])
-            wallet_payer = WalletModel.find_wallet_by_cpf(dados['cpf'])
+            wallet_payer = WalletModel.find_wallet_by_cpf(curent_user['cpf'])
+
+            # Solicita a aprovação da transferência
             aprove = request_transfer_money()
             
+            # Verifica se as carteiras existem e se o valor pode ser transferido
             if wallet_payer and wallet_payee and aprove:
                 if dados['value_payer']<=wallet_payer.value:
+
+                    # Atualiza os valores das carteiras
                     wallet_payee.value = wallet_payee.value + dados['value_payer']
                     wallet_payer.value = wallet_payer.value - dados['value_payer']
 
+                    # Atualiza as carteiras no banco de dados
                     wallet_payee.update_wallet()
                     wallet_payer.update_wallet()
 
                     return{'message': 'Transferência realizada com sucesso'}
             return{'message': 'Não foi possível realizar a transferência'} 
         
-
 class Dashboard(Resource):
     @jwt_required()
     def get(self):

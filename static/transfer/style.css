@@ -1,72 +1,54 @@
-
-/* Estilos específicos para dispositivos móveis */
-
-@media screen and (max-width: 600px) {
-	header {
-		font-size: 24px;
-	}
-
-}
-
-header {
-	background-color: #333;
-	color: #fff;
-	padding: 20px;
-	text-align: center;
-}
-
 /* Defina a cor de fundo da página */
 body {
-    background-color: #f2f2f2;
-  }
-  
-  /* Centralize o formulário na página */
-  form {
-    margin: auto;
-    width: 50%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: white;
-  }
-  
-  /* Estilize o cabeçalho */
-  h1 {
-    text-align: center;
-    font-size: 32px;
-    color: #333;
-  }
-  
-  /* Estilize as etiquetas */
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  /* Estilize os campos de entrada */
-  input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
-  
-  /* Estilize o botão de envio */
-  input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Mude a aparência do botão quando o usuário passar o mouse por cima */
-  input[type="submit"]:hover {
-    background-color: #45a049;
-  }
-  
+  background-color: #f2f2f2;
+}
+
+/* Centralize o formulário na página */
+form {
+  margin: auto;
+  width: 50%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Estilize o cabeçalho */
+h1 {
+  text-align: center;
+  font-size: 32px;
+  color: #333;
+}
+
+/* Estilize as etiquetas */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Estilize os campos de entrada */
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* Estilize o botão de envio */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Mude a aparência do botão quando o usuário passar o mouse por cima */
+input[type="submit"]:hover {
+  background-color: #45a049;
+}

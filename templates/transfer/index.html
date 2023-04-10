@@ -4,23 +4,58 @@
     <meta charset="UTF-8">
     <title>Transferência de dinheiro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='transfer/style.css') }}">
-    <style>
-      /* Adicione estilos CSS aqui */
-    </style>
   </head>
   <body>
     <h1>Transferência de dinheiro</h1>
-    <form action="/transfer" method="post">
-      <label for="cpf">CPF do pagador:</label>
-      <input type="text" id="cpf" name="cpf"><br>
+    <form   id="transfer-form">
 
       <label for="value_payer">Valor:</label>
-      <input type="text" id="value_payer" name="value_payer"><br>
+      <input type="text" id="value_payer" name="value_payer" autocomplete="off"><br>
 
       <label for="cpf_payee">CPF do recebedor:</label>
-      <input type="text" id="cpf_payee" name="cpf_payee"><br>
+      <input type="text" id="cpf_payee" name="cpf_payee" autocomplete="off"><br>
 
-      <input type="submit" value="Transferir">
+      <button type="submit" >Enviar</button>
     </form>
+
+    <footer>
+      <p>&copy; 2023</p>
+    </footer>
+    
+    <script>
+      const form = document.getElementById('transfer-form');
+      form.addEventListener('submit', async (event) =>{
+      event.preventDefault();
+      const cpf = document.getElementById('cpf_payee').value;
+      const value = document.getElementById('value_payer').value;
+      const token = document.cookie.split('=')[1].split(";")[0];
+
+      try{
+        const response = await fetch('/transferencia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            cpf_payee: cpf,
+            value_payer: value
+          })
+        });
+      
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+
+      }
+      
+      catch(error){
+        console.error(error);
+      }
+
+      })
+    </script>
+
   </body>
 </html>
+
