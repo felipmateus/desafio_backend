@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Logoff</title>
+    <style>
+      /* Estilo para o corpo da página */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+      }
+      
+      /* Estilo para o contêiner do formulário */
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+      }
+      
+      /* Estilo para o botão de logoff */
+      .logout-button {
+        display: inline-block;
+        background-color: #dc3545;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+      
+      /* Estilo para o botão de logoff quando passar o mouse por cima */
+      .logout-button:hover {
+        background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Logoff</h1>
+      <p>Tem certeza que deseja sair?</p>
+      <form method="get" action="{{ url_for('UserLogout') }}">
+        <button type="submit" class="logout-button">Sair</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
 from models.wallet import WalletModel
-from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies, get_jwt_identity,unset_jwt_cookies
 from controller.helper.safe_str_cmp import safe_str_cmp
 from controller.helper.approve_transfer import request_transfer_money
 from flask import render_template, make_response, jsonify, request
@@ -100,7 +100,7 @@ class UserLogin(Resource):
                 return response
             
             return {'message': 'The username or password is incorrect.'}, 401
-            
+   
 class UserTransferMoney(Resource):
         
         @jwt_required()
@@ -148,4 +148,10 @@ class Dashboard(Resource):
         # Token válido, redireciona para a página de dashboard
         return make_response(render_template("dashboard/index.html"))
 
+class UserLogout(Resource):
+    @jwt_required()
+    def get(self):
+        response = make_response(render_template("home/index.html"))
+        unset_jwt_cookies(response)
+        return response
 
