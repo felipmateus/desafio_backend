@@ -51,4 +51,34 @@ class UserTransferMoney(Resource):
                     wallet_payer.update_wallet()
 
                     return{'message': 'Transferência realizada com sucesso'}
-            return{'message': 'Não foi possível realizar a transferência'} 
+            return{'message': 'Não foi possível realizar a transferência'}
+        
+class UserDeposit(Resource):
+    @jwt_required()
+    def get(self):
+        return make_response(render_template("deposit/index.html"))
+
+    @jwt_required()
+    def post(cls):
+        
+        # Recebe o usuário logado
+        curent_user = get_jwt_identity()
+
+        # Define os atributos da requisição
+        atributos = reqparse.RequestParser()
+        atributos.add_argument('value', type=float, required=True, help=("The field 'value' cannot be left blank"))
+        dados = atributos.parse_args()
+
+        # Encontra a carteira do usuário
+        wallet = WalletModel.find_wallet_by_cpf(curent_user['cpf'])
+
+        # Verifica se a carteira existe
+        if wallet:
+            # Atualiza o valor da carteira
+            wallet.value = wallet.value + dados['value']
+
+            # Atualiza a carteira no banco de dados
+            wallet.update_wallet()
+
+            return{'message': 'Depósito realizado com sucesso'}
+        return{'message': 'Não foi possível realizar o depósito'}

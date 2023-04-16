@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_restful import Resource, Api
 from controller.user import *
-from controller.dashboard import UserTransferMoney, Dashboard
+from controller.dashboard import *
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__,template_folder='templates', static_folder='static')
@@ -19,13 +19,17 @@ jwt = JWTManager(app)
 def create_banco():
     banco.create_all()
 
+
 api.add_resource(Home, '/home')
 api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(UserRegister, '/cadastro')
 api.add_resource(UserLogin, '/login')
-api.add_resource(UserTransferMoney, '/dashboard/transferencia')
-api.add_resource(Dashboard, '/dashboard')
 api.add_resource(UserLogout, '/logout')
+
+
+api.add_resource(Dashboard, '/dashboard')
+api.add_resource(UserTransferMoney, '/dashboard/transferencia')
+api.add_resource(UserDeposit, '/dashboard/deposito/')
 
 if __name__ == '__main__':
     from sql_alchemy import banco
