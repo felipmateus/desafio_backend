@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_restful import Resource, Api
 from controller.user import *
+from controller.dashboard import UserTransferMoney, Dashboard
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__,template_folder='templates', static_folder='static')

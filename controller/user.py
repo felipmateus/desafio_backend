@@ -100,58 +100,11 @@ class UserLogin(Resource):
                 return response
             
             return {'message': 'The username or password is incorrect.'}, 401
-   
-class UserTransferMoney(Resource):
-        
-        @jwt_required()
-        def get(self):
-            return make_response(render_template("transfer/index.html"))
-
-        @jwt_required()
-        def post(cls):
-            
-            # Recebe o usuário logado
-            curent_user = get_jwt_identity()
-
-            # Define os atributos da requisição
-            atributos = reqparse.RequestParser()
-            atributos.add_argument('value_payer', type=float, required=True, help=("The field 'value' cannot be left blank"))
-            atributos.add_argument('cpf_payee', type=int, required=True, help=("The field 'cpf of payee' cannot be left blank")) 
-
-            # Encontra as carteiras do pagador e do recebedor
-            dados = atributos.parse_args()
-            wallet_payee = WalletModel.find_wallet_by_cpf(dados['cpf_payee'])
-            wallet_payer = WalletModel.find_wallet_by_cpf(curent_user['cpf'])
-
-            # Solicita a aprovação da transferência
-            aprove = request_transfer_money()
-            
-            # Verifica se as carteiras existem e se o valor pode ser transferido
-            if wallet_payer and wallet_payee and aprove:
-                if dados['value_payer']<=wallet_payer.value:
-
-                    # Atualiza os valores das carteiras
-                    wallet_payee.value = wallet_payee.value + dados['value_payer']
-                    wallet_payer.value = wallet_payer.value - dados['value_payer']
-
-                    # Atualiza as carteiras no banco de dados
-                    wallet_payee.update_wallet()
-                    wallet_payer.update_wallet()
-
-                    return{'message': 'Transferência realizada com sucesso'}
-            return{'message': 'Não foi possível realizar a transferência'} 
-        
-class Dashboard(Resource):
-    @jwt_required()
-    def get(self):
-
-        # Token válido, redireciona para a página de dashboard
-        return make_response(render_template("dashboard/index.html"))
-
+     
 class UserLogout(Resource):
     @jwt_required()
     def get(self):
         response = make_response(render_template("home/index.html"))
         unset_jwt_cookies(response)
         return response
-
+    
