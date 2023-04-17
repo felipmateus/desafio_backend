@@ -29,7 +29,8 @@ api.add_resource(UserLogout, '/logout')
 
 api.add_resource(Dashboard, '/dashboard')
 api.add_resource(UserTransferMoney, '/dashboard/transferencia')
-api.add_resource(UserDeposit, '/dashboard/deposito/')
+api.add_resource(UserDeposit, '/dashboard/deposito')
+
 
 if __name__ == '__main__':
     from sql_alchemy import banco

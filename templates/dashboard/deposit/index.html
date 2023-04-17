@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deposito</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard/deposit/style.css') }}">
+</head>
+<body>
+  <h1>Deposito</h1>
+  <form method="post" id="deposit-form">
+    <label for="value">Valor:</label>
+    <input type="number" name="value" id="value" required>
+    <button type="submit">Deposit</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('deposit-form');
+    form.addEventListener('submit', async (event) =>{
+    event.preventDefault();
+    const value = document.getElementById('value').value;
+    const token = document.cookie.split('=')[1].split(";")[0];
+
+    try{
+      const response = await fetch('/dashboard/deposito', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          value: value
+        })
+      });
+    
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+    }
+    
+    catch(error){
+      console.error(error);
+    }
+
+    })
+  </script>
+
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Deposito /title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard/deposit/style.css') }}">
+</head>
+<body>
+  <h1>Deposito</h1>
+  <form method="post">
+    <label for="value">Value:</label>
+    <input type="number" name="value" required>
+    <button type="submit">Deposito</button>
+  </form>
+</body>
+</html> -->

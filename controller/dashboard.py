@@ -14,7 +14,6 @@ class Dashboard(Resource):
         return make_response(render_template("dashboard/index.html"))
 
 class UserTransferMoney(Resource):
-        
         @jwt_required()
         def get(self):
             return make_response(render_template("transfer/index.html"))
@@ -56,7 +55,8 @@ class UserTransferMoney(Resource):
 class UserDeposit(Resource):
     @jwt_required()
     def get(self):
-        return make_response(render_template("deposit/index.html"))
+
+        return make_response(render_template("dashboard/deposit/index.html"))
 
     @jwt_required()
     def post(cls):
@@ -82,3 +82,8 @@ class UserDeposit(Resource):
 
             return{'message': 'Depósito realizado com sucesso'}
         return{'message': 'Não foi possível realizar o depósito'}
+
+class DashboardKaban(Resource):
+    @jwt_required()
+    def get(self):
+            return make_response(render_template("dashboard/kaban/index.html"))
