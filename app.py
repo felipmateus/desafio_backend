@@ -11,6 +11,8 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 app.config['JWT_REFRESH_COOKIE_PATH'] = '/auth/refresh'
 app.config['JWT_SECRET_KEY'] = 'dont_tell_anyone'
+
+
 api = Api(app)
 jwt = JWTManager(app)
 
@@ -28,6 +30,7 @@ api.add_resource(UserLogout, '/logout')
 
 
 api.add_resource(Dashboard, '/dashboard')
+api.add_resource(DashboardKaban, '/dashboard/kaban')
 api.add_resource(UserTransferMoney, '/dashboard/transferencia')
 api.add_resource(UserDeposit, '/dashboard/deposito')
 

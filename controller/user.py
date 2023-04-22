@@ -107,4 +107,3 @@ class UserLogout(Resource):
         response = make_response(render_template("home/index.html"))
         unset_jwt_cookies(response)
         return response
-    

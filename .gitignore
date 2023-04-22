@@ -30,3 +30,5 @@ resources/__pycache__/user.cpython-310.pyc
 .sand_box.py
 .vscode
 .vscode/settings.json
+
+.pytest_cache
