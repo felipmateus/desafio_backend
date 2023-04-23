@@ -17,7 +17,7 @@ class User(Resource):
     def get(self, user_id):
         user = UserModel.find_user(user_id)
         if user:
-            return user.json()
+            return user.json(), 200
         return {'message': 'user not found.'}, 404
     
     @jwt_required()
@@ -104,6 +104,6 @@ class UserLogin(Resource):
 class UserLogout(Resource):
     @jwt_required()
     def get(self):
-        response = make_response(render_template("home/index.html"))
+        response = make_response(render_template("home/index.html"), 200)
         unset_jwt_cookies(response)
         return response

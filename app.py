@@ -4,14 +4,17 @@ from controller.user import *
 from controller.dashboard import *
 from flask_jwt_extended import JWTManager
 
-app = Flask(__name__,template_folder='templates', static_folder='static')
+def create_app():
+    app = Flask(__name__,template_folder='templates', static_folder='static')
+    return app
+
+app = create_app()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 app.config['JWT_REFRESH_COOKIE_PATH'] = '/auth/refresh'
 app.config['JWT_SECRET_KEY'] = 'dont_tell_anyone'
-
 
 api = Api(app)
 jwt = JWTManager(app)
