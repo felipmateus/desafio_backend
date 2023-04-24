@@ -13,8 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
-app.config['JWT_REFRESH_COOKIE_PATH'] = '/auth/refresh'
 app.config['JWT_SECRET_KEY'] = 'dont_tell_anyone'
+app.config['TESTING'] = True
 
 api = Api(app)
 jwt = JWTManager(app)
