@@ -3,13 +3,16 @@ from flask_restful import Resource, Api
 from controller.user import *
 from controller.dashboard import *
 from flask_jwt_extended import JWTManager
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__,template_folder='templates', static_folder='static')
     return app
-
+ 
 app = create_app()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:lala102030@host.docker.internal/teste"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
@@ -41,4 +44,4 @@ api.add_resource(UserDeposit, '/dashboard/deposito')
 if __name__ == '__main__':
     from sql_alchemy import banco
     banco.init_app(app)
-    app.run(debug=True)
+    app.run(debug=True, port="3001", host="0.0.0.0")

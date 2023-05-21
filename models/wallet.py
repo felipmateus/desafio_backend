@@ -5,7 +5,7 @@ class WalletModel(banco.Model):
     __tablename__ = 'wallet'
 
     wallet_id = banco.Column(banco.Integer, primary_key=True)
-    cpf = banco.Column(banco.String(80), banco.ForeignKey('users.cpf'))
+    cpf = banco.Column(banco.Integer)
     value = banco.Column(banco.Float(precision=4))
 
 
