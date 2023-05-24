@@ -12,7 +12,7 @@ def create_app():
     return app
  
 app = create_app()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://'user':'senha'@host.docker.internal/'bd'"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:@desafio_backend_mysql/desafio_backend"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
