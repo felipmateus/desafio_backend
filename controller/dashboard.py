@@ -87,3 +87,50 @@ class DashboardKaban(Resource):
     @jwt_required()
     def get(self):
             return make_response(render_template("dashboard/kaban/index.html"))
+    
+
+class Vagas(Resource):
+
+   
+        args = reqparse.RequestParser()
+
+        args.add_argument('page', type=int, required=False, help="The field 'descrição' cannot be left blank")
+        args.add_argument('limit', type=int, required=False, help="The field 'va' cannot be left blank")
+
+    
+
+
+
+        def get(self):
+
+            args = reqparse.parse_args()
+
+            page = args['page']
+            limit = args['limit']
+
+            
+
+            data = [{
+                    'descrição': 'Desenvolvedor Full Stack',
+                    'va': 'R$ 3.000,00',
+                    'vagas': '1'
+                },
+
+                {
+                    'descrição': 'Desenvolvedor Front-End',
+                    'va': 'R$ 2.000,00',
+                    'vagas': '2'
+                },
+
+                {
+                    'descrição': 'Desenvolvedor Back-End',
+                    'va': 'R$ 2.000,00',
+                    'vagas': '2'
+                }]
+                
+            return {
+                'status': 'sucesso',
+                'dados': data,
+                'page': page,
+                'limit': limit
+            }

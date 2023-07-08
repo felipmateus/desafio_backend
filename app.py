@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from controller.user import *
 from controller.dashboard import *
 from flask_jwt_extended import JWTManager
@@ -12,7 +12,8 @@ def create_app():
     return app
  
 app = create_app()
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:@desafio_backend_mysql/desafio_backend"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:@desafio_backend_mysql/desafio_backend"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:lala102030@localhost:3306/teste"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS '] = False
 app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
@@ -23,9 +24,9 @@ api = Api(app)
 jwt = JWTManager(app)
 
 
-@app.before_first_request
-def create_banco():
-    banco.create_all()
+# @app.before_first_request
+# def create_banco():
+#     banco.create_all()
 
 
 api.add_resource(Home, '/home')
@@ -40,6 +41,8 @@ api.add_resource(DashboardKaban, '/dashboard/kaban')
 api.add_resource(UserTransferMoney, '/dashboard/transferencia')
 api.add_resource(UserDeposit, '/dashboard/deposito')
 
+
+api.add_resource(Vagas, '/vagas')
 
 if __name__ == '__main__':
     from sql_alchemy import banco

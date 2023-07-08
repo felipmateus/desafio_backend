@@ -81,7 +81,18 @@ main {
   font-size: 16px;
   font-weight: bold;
   transition: background-color 0.3s;
+  position: absolute;
 }
+
+.button-logout {
+    color: #4CAF50;
+    text-align: right;
+    background: white;
+    font-size: 70px;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    font-family: serif; 
+  }
 
 .button:hover {
   background-color: #3e8e41;
